@@ -1,5 +1,7 @@
 import express from "express";
 import { connectDb } from "./config/db";
+import router from "./routes/userRoutes";
+import User from "./models/users";
 const app = express();
 
 //Port
@@ -9,8 +11,14 @@ connectDb()
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
+app.use("/api/users", router);
+
+
+app.get("/", async (req, res) => {
 	res.send("Hello from Express!");
+
+	const user = await User.findOne({ email: req.body.email }); // req.body is undefined for GET
+	res.json(user);
 
 });
 
